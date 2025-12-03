@@ -1,0 +1,13 @@
+# Ignore files from Vercel deployment
+node_modules/
+dist/
+coverage/
+*.log
+.env*
+.git/
+.vscode/
+.idea/
+*.md
+!VERCEL_DEPLOYMENT.md
+src/assets/
+
