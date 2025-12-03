@@ -17,5 +17,13 @@ export const attachAuthRoutes = (router: Router) => {
   // Profile routes (requires authentication)
   router.get('/auth/profile', authenticateToken, (req, res) => authController.getProfile(req, res))
   router.put('/auth/profile', authenticateToken, (req, res) => authController.updateProfile(req, res))
+
+  // Password reset routes
+  router.post('/auth/forgot-password', (req, res) => authController.forgotPassword(req, res))
+  router.post('/auth/reset-password', (req, res) => authController.resetPassword(req, res))
+
+  // Email verification routes
+  router.post('/auth/verify-email', (req, res) => authController.verifyEmail(req, res))
+  router.post('/auth/resend-verification', (req, res) => authController.resendVerificationEmail(req, res))
 }
 

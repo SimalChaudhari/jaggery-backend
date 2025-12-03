@@ -85,5 +85,43 @@ export class AuthController {
       return res.status(statusCode).json({ message: error.message || 'Failed to update profile' })
     }
   }
+
+  async forgotPassword(req: Request, res: Response) {
+    try {
+      const result = await authService.forgotPassword(req.body)
+      return res.status(200).json(result)
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message || 'Failed to send password reset email' })
+    }
+  }
+
+  async resetPassword(req: Request, res: Response) {
+    try {
+      const result = await authService.resetPassword(req.body)
+      return res.status(200).json(result)
+    } catch (error: any) {
+      const statusCode = error.message.includes('Invalid') || error.message.includes('expired') ? 400 : 400
+      return res.status(statusCode).json({ message: error.message || 'Failed to reset password' })
+    }
+  }
+
+  async verifyEmail(req: Request, res: Response) {
+    try {
+      const result = await authService.verifyEmail(req.body)
+      return res.status(200).json(result)
+    } catch (error: any) {
+      const statusCode = error.message.includes('Invalid') || error.message.includes('expired') ? 400 : 400
+      return res.status(statusCode).json({ message: error.message || 'Failed to verify email' })
+    }
+  }
+
+  async resendVerificationEmail(req: Request, res: Response) {
+    try {
+      const result = await authService.resendVerificationEmail(req.body)
+      return res.status(200).json(result)
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message || 'Failed to resend verification email' })
+    }
+  }
 }
 

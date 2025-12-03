@@ -1,6 +1,7 @@
 // User Service for MongoDB
 import bcrypt from 'bcrypt'
 import { UserModel, UserRole, UserStatus } from './user.model'
+import { ReviewModel } from '../review/review.model'
 
 export interface CreateUserDto {
   username?: string
@@ -38,13 +39,13 @@ export interface UpdateUserDto {
 
 export class UserService {
   async getAll() {
-    return await UserModel.find({ isDeleted: false, role: { $ne: UserRole.Admin } }).select('-password -otp -otpExpires -sessionToken')
+    return await UserModel.find({ role: { $ne: UserRole.Admin } }).select('-password -otp -otpExpires -sessionToken')
   }
 
   async getById(id: string) {
-    const user = await UserModel.findOne({ _id: id, isDeleted: false }).select('-password -otp -otpExpires -sessionToken')
+    const user = await UserModel.findById(id).select('-password -otp -otpExpires -sessionToken')
     if (!user) {
-      throw new Error('User not found or has been deleted')
+      throw new Error('User not found')
     }
     return user
   }
@@ -83,12 +84,11 @@ export class UserService {
       city,
       pincode,
       isVerified: isVerified || false,
-      isDeleted: false,
     })
 
     await newUser.save()
 
-    const { password: _, otp, otpExpires, sessionToken, isDeleted, ...userResponse } = newUser.toObject()
+    const { password: _, otp, otpExpires, sessionToken, ...userResponse } = newUser.toObject()
     return userResponse
   }
 
@@ -96,10 +96,6 @@ export class UserService {
     const user = await UserModel.findById(id)
     if (!user) {
       throw new Error('User not found')
-    }
-
-    if (user.isDeleted) {
-      throw new Error('User has been deleted')
     }
 
     // Check if email or mobile is being updated and already exists
@@ -139,7 +135,7 @@ export class UserService {
 
     await user.save()
 
-    const { password: _, otp, otpExpires, sessionToken, isDeleted, ...userResponse } = user.toObject()
+    const { password: _, otp, otpExpires, sessionToken, ...userResponse } = user.toObject()
     return userResponse
   }
 
@@ -156,7 +152,7 @@ export class UserService {
     user.status = status
     await user.save()
 
-    const { password, otp, otpExpires, sessionToken, isDeleted, ...userResponse } = user.toObject()
+    const { password, otp, otpExpires, sessionToken, ...userResponse } = user.toObject()
     return userResponse
   }
 
@@ -171,9 +167,15 @@ export class UserService {
       throw new Error('User not found')
     }
 
-    user.isDeleted = true
-    await user.save()
+    // Delete all reviews and ratings associated with this user
+    const deletedReviews = await ReviewModel.deleteMany({ userId: id })
+    
+    // Hard delete the user (permanently remove from database)
+    await UserModel.findByIdAndDelete(id)
 
-    return { message: 'User deleted successfully' }
+    return { 
+      message: 'User deleted successfully',
+      deletedReviewsCount: deletedReviews.deletedCount || 0
+    }
   }
 }
