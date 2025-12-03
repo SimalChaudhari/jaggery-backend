@@ -35,6 +35,7 @@ const getApp = async () => {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const expressApp = await getApp()
-  return expressApp(req, res)
+  // Express app handles the request and response internally
+  expressApp(req, res)
 }
 

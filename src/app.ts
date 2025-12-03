@@ -35,6 +35,19 @@ export const createApp = (): Express => {
     }),
   )
 
+  // Root route
+  app.get('/', (_req, res) => {
+    res.status(200).json({ 
+      message: 'Jaggery Backend API',
+      version: '1.0.0',
+      endpoints: {
+        health: '/health',
+        api: '/api',
+        ping: '/api/ping'
+      }
+    })
+  })
+
   // Health check route (no /api prefix)
   app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'ok' })
@@ -54,6 +67,24 @@ export const createApp = (): Express => {
   // Ping route
   apiRouter.get('/ping', (_req, res) => {
     res.status(200).json({ ok: true, message: 'Server live with Mongo connection pending...' })
+  })
+
+  // API root route
+  apiRouter.get('/', (_req, res) => {
+    res.status(200).json({ 
+      message: 'Jaggery API',
+      version: '1.0.0',
+      endpoints: {
+        auth: '/api/auth',
+        users: '/api/users',
+        products: '/api/products',
+        categories: '/api/categories',
+        useCases: '/api/use-cases',
+        sizes: '/api/sizes',
+        reviews: '/api/reviews',
+        cloudinary: '/api/cloudinary'
+      }
+    })
   })
 
   // Mount API router at /api prefix
