@@ -21,11 +21,6 @@ export interface IUser extends Document {
   password?: string | null
   role: UserRole
   status: UserStatus
-  address?: string
-  country?: string
-  state?: string
-  city?: string
-  pincode?: string
   isVerified?: boolean
   otp?: string | null
   otpExpires?: Date | null
@@ -48,11 +43,6 @@ const UserSchema = new Schema<IUser>(
     password: { type: String, select: false },
     role: { type: String, enum: Object.values(UserRole), default: UserRole.User },
     status: { type: String, enum: Object.values(UserStatus), default: UserStatus.Active },
-    address: { type: String },
-    country: { type: String },
-    state: { type: String },
-    city: { type: String },
-    pincode: { type: String },
     isVerified: { type: Boolean, default: false },
     otp: { type: String, select: false },
     otpExpires: { type: Date },

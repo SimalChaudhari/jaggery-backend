@@ -27,7 +27,6 @@ out/
 
 # IDE/Editor specific files
 .idea/
-.vscode/
 *.code-workspace
 
 # OS generated files
@@ -35,11 +34,6 @@ Thumbs.db
 .DS_Store
 
 # Environment files
-.env
-.env.local
-.env.development
-.env.test
-.env.production
 
 # Cache files
 .cache/
@@ -68,3 +62,7 @@ pnpm-lock.yaml
 # API keys or other credentials
 *.key
 *.crt
+config.bat
+temp_auto_push.bat
+temp_interactive_push.bat
+.env
