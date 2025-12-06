@@ -39,8 +39,8 @@ export const authenticateToken = async (req: AuthRequest, res: Response, next: N
 
       // Verify session token matches database
       const user = await UserModel.findById(decoded.id).select('+sessionToken')
-      if (!user || user.isDeleted) {
-        return res.status(401).json({ message: 'User not found or has been deleted' })
+      if (!user) {
+        return res.status(401).json({ message: 'User not found' })
       }
 
       if (user.sessionToken !== decoded.sessionToken) {

@@ -12,11 +12,6 @@ export interface CreateUserDto {
   password?: string
   role?: UserRole
   status?: UserStatus
-  address?: string
-  country?: string
-  state?: string
-  city?: string
-  pincode?: string
   isVerified?: boolean
 }
 
@@ -29,11 +24,6 @@ export interface UpdateUserDto {
   password?: string
   role?: UserRole
   status?: UserStatus
-  address?: string
-  country?: string
-  state?: string
-  city?: string
-  pincode?: string
   isVerified?: boolean
 }
 
@@ -51,7 +41,7 @@ export class UserService {
   }
 
   async create(dto: CreateUserDto) {
-    const { username, firstname, lastname, email, mobile, password, role, status, address, country, state, city, pincode, isVerified } = dto
+    const { username, firstname, lastname, email, mobile, password, role, status, isVerified } = dto
 
     // At least one of firstname, lastname, or username should be provided
     if ((!firstname && !lastname && !username) || !email || !mobile) {
@@ -78,11 +68,6 @@ export class UserService {
       password: passwordHash,
       role: role || UserRole.User,
       status: status || UserStatus.Active,
-      address,
-      country,
-      state,
-      city,
-      pincode,
       isVerified: isVerified || false,
     })
 
@@ -126,11 +111,6 @@ export class UserService {
     if (dto.mobile) user.mobile = dto.mobile
     if (dto.role && Object.values(UserRole).includes(dto.role)) user.role = dto.role
     if (dto.status && Object.values(UserStatus).includes(dto.status)) user.status = dto.status
-    if (dto.address !== undefined) user.address = dto.address
-    if (dto.country !== undefined) user.country = dto.country
-    if (dto.state !== undefined) user.state = dto.state
-    if (dto.city !== undefined) user.city = dto.city
-    if (dto.pincode !== undefined) user.pincode = dto.pincode
     if (dto.isVerified !== undefined) user.isVerified = dto.isVerified
 
     await user.save()
@@ -156,10 +136,6 @@ export class UserService {
     return userResponse
   }
 
-  async getAdminState(): Promise<string | null> {
-    const admin = await UserModel.findOne({ role: UserRole.Admin }).select('state')
-    return admin?.state ?? null
-  }
 
   async delete(id: string) {
     const user = await UserModel.findById(id)

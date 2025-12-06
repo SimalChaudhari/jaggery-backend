@@ -31,7 +31,7 @@ export const optionalAuthenticateToken = async (req: AuthRequest, res: Response,
 
       // Verify session token matches database
       const user = await UserModel.findById(decoded.id).select('+sessionToken')
-      if (user && !user.isDeleted && user.status !== 'Inactive' && user.status !== 'Banned') {
+      if (user && user.status !== 'Inactive' && user.status !== 'Banned') {
         if (user.sessionToken === decoded.sessionToken) {
           // Attach user info to request
           req.user = {

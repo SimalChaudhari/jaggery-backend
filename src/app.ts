@@ -11,6 +11,8 @@ import { attachUseCaseRoutes } from './use-case/use-case.route'
 import { attachSizeRoutes } from './size/size.route'
 import { attachReviewRoutes } from './review/review.route'
 import { attachCloudinaryRoutes } from './cloudinary/cloudinary.route'
+import { attachAddressRoutes } from './address/address.route'
+import { attachOrderRoutes } from './order/order.route'
 
 export const createApp = (): Express => {
   const app = express()
@@ -63,6 +65,8 @@ export const createApp = (): Express => {
   attachSizeRoutes(apiRouter)
   attachReviewRoutes(apiRouter)
   attachCloudinaryRoutes(apiRouter)
+  attachAddressRoutes(apiRouter)
+  attachOrderRoutes(apiRouter)
 
   // Ping route
   apiRouter.get('/ping', (_req, res) => {
@@ -82,7 +86,10 @@ export const createApp = (): Express => {
         useCases: '/api/use-cases',
         sizes: '/api/sizes',
         reviews: '/api/reviews',
-        cloudinary: '/api/cloudinary'
+        cloudinary: '/api/cloudinary',
+        addresses: '/api/addresses',
+        orders: '/api/orders',
+        payments: '/api/payments'
       }
     })
   })
